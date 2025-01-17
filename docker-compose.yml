@@ -1,8 +1,8 @@
 services:
   hadoop-node-1:
     image: hadoop-mapreduce:latest
-    container_name: hadoop_node_1
-    hostname: hadoop_node_1
+    container_name: hadoop-node-1
+    hostname: hadoop-node-1
     ports:
       - "9870:9870"   # HDFS NameNode UI
       - "8088:8088"   # YARN ResourceManager UI
@@ -13,8 +13,8 @@ services:
 
   hadoop-node-2:
     image: hadoop-mapreduce:latest
-    container_name: hadoop_node_2
-    hostname: hadoop_node_2
+    container_name: hadoop-node-2
+    hostname: hadoop-node-2
     networks:
       - hadoop
     user: hadoop
@@ -22,8 +22,8 @@ services:
   
   hadoop-node-3:
     image: hadoop-mapreduce:latest
-    container_name: hadoop_node_3
-    hostname: hadoop_node_3
+    container_name: hadoop-node-3
+    hostname: hadoop-node-3
     networks:
       - hadoop
     user: hadoop

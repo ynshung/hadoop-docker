@@ -1,6 +1,3 @@
-# Build args for architecture-specific base images
-ARG TARGETARCH
-
 FROM ubuntu:20.04
 
 # Prevent interactive prompts during installation
@@ -16,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     sudo \
     openssh-server \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Java environment variables based on architecture
@@ -52,25 +50,28 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     mv hadoop-${HADOOP_VERSION} ${HADOOP_HOME} && \
     rm ${HADOOP_PACKAGE}
 
+# Download sample data
+RUN wget https://www.corpusdata.org/now/samples/now-text-2024.zip -O /home/hadoop/dataset.zip && \
+    mkdir /home/hadoop/input && \
+    unzip /home/hadoop/dataset.zip -d /home/hadoop/input && \
+    rm /home/hadoop/dataset.zip && \
+    chmod 777 /home/hadoop/input/*
+
 # Configure SSH
+RUN mkdir -p /home/hadoop/.ssh
+COPY config/ssh_config /home/hadoop/.ssh/config
 RUN mkdir -p /run/sshd && \
-    mkdir -p /home/hadoop/.ssh && \
-    ssh-keygen -t rsa -P '' -f /home/hadoop/.ssh/id_rsa && \
+    ssh-keygen -t rsa -N '' -f /home/hadoop/.ssh/id_rsa && \
     cat /home/hadoop/.ssh/id_rsa.pub >> /home/hadoop/.ssh/authorized_keys && \
-    chmod 0600 /home/hadoop/.ssh/authorized_keys && \
-    chown -R hadoop:hadoop /home/hadoop/.ssh && \
-    echo "Host *" > /home/hadoop/.ssh/config && \
-    echo "    UserKnownHostsFile /dev/null" >> /home/hadoop/.ssh/config && \
-    echo "    StrictHostKeyChecking no" >> /home/hadoop/.ssh/config && \
-    chmod 600 /home/hadoop/.ssh/config && \
-    chown hadoop:hadoop /home/hadoop/.ssh/config
+    chmod 600 /home/hadoop/.ssh/authorized_keys /home/hadoop/.ssh/config && \
+    chown -R hadoop:hadoop /home/hadoop/.ssh
 
 # Copy Hadoop configuration files
 COPY config/core-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY config/hdfs-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY config/mapred-site.xml ${HADOOP_HOME}/etc/hadoop/
 COPY config/yarn-site.xml ${HADOOP_HOME}/etc/hadoop/
-COPY config/ssh_config /home/hadoop/.ssh/ssh_config
+COPY config/workers ${HADOOP_HOME}/etc/hadoop/
 
 # Create necessary directories and set permissions
 RUN mkdir -p /opt/hadoop/logs /opt/hadoop/data/namenode /opt/hadoop/data/datanode && \
@@ -92,7 +93,8 @@ RUN export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64 >> /opt/hadoop/etc/hadoop
 USER hadoop
 RUN /opt/hadoop/bin/hdfs namenode -format
 
-RUN sudo service ssh start
-RUN bash
+CMD ["sh", "-c", "sudo service ssh start; bash"]
+
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" >> /opt/hadoop/etc/hadoop/hadoop-env.sh
 
 EXPOSE 9870 9864 9866 8088
