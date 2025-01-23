@@ -52,10 +52,16 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 
 # Download sample data
 RUN wget https://www.corpusdata.org/now/samples/now-text-2024.zip -O /home/hadoop/dataset.zip && \
-    mkdir /home/hadoop/input && \
-    unzip /home/hadoop/dataset.zip -d /home/hadoop/input && \
+    mkdir /home/hadoop/input-now && \
+    unzip /home/hadoop/dataset.zip -d /home/hadoop/input-now && \
     rm /home/hadoop/dataset.zip && \
-    chmod 777 /home/hadoop/input/*
+    chmod 777 /home/hadoop/input-now/*
+
+RUN wget https://github.com/ynshung/netflix-movie-rating-dataset/releases/download/v1.0/netflix-dataset.zip -O /home/hadoop/dataset.zip && \
+    mkdir /home/hadoop/input-netflix && \
+    unzip /home/hadoop/dataset.zip -d /home/hadoop/input-netflix && \
+    rm /home/hadoop/dataset.zip && \
+    chmod 777 /home/hadoop/input-netflix/*
 
 # Configure SSH
 RUN mkdir -p /home/hadoop/.ssh
