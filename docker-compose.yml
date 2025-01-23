@@ -1,6 +1,6 @@
 services:
   hadoop-node-1:
-    image: ynshung/hadoop-mapreduce:latest
+    image: ynshung/hadoop-docker:latest
     container_name: hadoop-node-1
     hostname: hadoop-node-1
     ports:
@@ -12,7 +12,7 @@ services:
     stdin_open: true
 
   hadoop-node-2:
-    image: ynshung/hadoop-mapreduce:latest
+    image: ynshung/hadoop-docker:latest
     container_name: hadoop-node-2
     hostname: hadoop-node-2
     networks:
@@ -21,7 +21,7 @@ services:
     stdin_open: true
   
   hadoop-node-3:
-    image: ynshung/hadoop-mapreduce:latest
+    image: ynshung/hadoop-docker:latest
     container_name: hadoop-node-3
     hostname: hadoop-node-3
     networks:
