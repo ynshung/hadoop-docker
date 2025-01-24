@@ -1,3 +1,10 @@
+x-hadoop-node: &hadoop-node
+  image: ynshung/hadoop-docker:latest
+  networks:
+    - hadoop
+  user: hadoop
+  stdin_open: true
+
 services:
   hadoop-node-1:
     <<: *hadoop-node
@@ -16,13 +23,6 @@ services:
     <<: *hadoop-node
     container_name: hadoop-node-3
     hostname: hadoop-node-3
-
-x-hadoop-node: &hadoop-node
-  image: ynshung/hadoop-docker:latest
-  networks:
-    - hadoop
-  user: hadoop
-  stdin_open: true
 
 networks:
   hadoop:
