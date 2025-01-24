@@ -52,7 +52,7 @@ hadoop fs -copyToLocal /output-word-count/part-00000 /home/hadoop/output/word_co
 hadoop fs -copyToLocal /output-netflix/part-00000 /home/hadoop/output/movie_ratings_summary.csv
 
 # Get top movies by year
-python3 /home/hadoop/scripts/netflix/netflix_get_top_by_year.py
+python3 /home/hadoop/netflix/netflix_get_top_by_year.py
 # Top and worst movies csv output at /home/hadoop/output
 
 # in local terminal
