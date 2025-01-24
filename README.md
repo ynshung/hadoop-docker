@@ -9,10 +9,7 @@ See also: Implementation in [MPI Kubernetes](https://github.com/ynshung/mpi-kube
 ## Usage
 
 ```bash
-docker pull ynshung/hadoop-mapreduce:latest
-# or build the image (optional)
-docker build -t ynshung/hadoop-mapreduce:latest .
-
+docker compose pull
 docker compose up -d
 docker exec -it hadoop-node-1 bash
 
