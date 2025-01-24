@@ -84,11 +84,11 @@ RUN mkdir -p /opt/hadoop/logs /opt/hadoop/data/namenode /opt/hadoop/data/datanod
     chown -R hadoop:hadoop ${HADOOP_HOME} && \
     chmod -R 755 ${HADOOP_HOME}
 
+# Install pandas
+RUN pip3 install pandas
+
 # Set working directory
 WORKDIR /home/hadoop
-
-# Copy Python MapReduce example
-COPY scripts/* /home/hadoop/
 
 RUN echo "hadoop ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
@@ -97,6 +97,8 @@ RUN echo ssh | sudo tee /etc/pdsh/rcmd_default
 RUN export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64 >> /opt/hadoop/etc/hadoop/hadoop-env.sh
 
 USER hadoop
+COPY scripts/ /home/hadoop/
+RUN mkdir -p /home/hadoop/output
 RUN /opt/hadoop/bin/hdfs namenode -format
 
 CMD ["sh", "-c", "sudo service ssh start; bash"]
