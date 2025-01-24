@@ -61,3 +61,8 @@ python3 /home/hadoop/scripts/netflix/netflix_get_top_by_year.py
 # in local terminal
 docker cp hadoop-node-1:/home/hadoop/output .
 ```
+
+### Modify number of nodes
+To increase/decrease the number of nodes launched (default is 3):
+* Modify the `docker-compose.yml` file
+* Inside the node container, modify the `workers` file by running `sudo nano $HADOOP_HOME/etc/hadoop/workers`

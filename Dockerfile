@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     sudo \
     openssh-server \
     unzip \
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Java environment variables based on architecture

@@ -1,33 +1,28 @@
 services:
   hadoop-node-1:
-    image: ynshung/hadoop-docker:latest
+    <<: *hadoop-node
     container_name: hadoop-node-1
     hostname: hadoop-node-1
     ports:
       - "9870:9870"   # HDFS NameNode UI
       - "8088:8088"   # YARN ResourceManager UI
-    networks:
-      - hadoop
-    user: hadoop
-    stdin_open: true
 
   hadoop-node-2:
-    image: ynshung/hadoop-docker:latest
+    <<: *hadoop-node
     container_name: hadoop-node-2
     hostname: hadoop-node-2
-    networks:
-      - hadoop
-    user: hadoop
-    stdin_open: true
   
   hadoop-node-3:
-    image: ynshung/hadoop-docker:latest
+    <<: *hadoop-node
     container_name: hadoop-node-3
     hostname: hadoop-node-3
-    networks:
-      - hadoop
-    user: hadoop
-    stdin_open: true
+
+x-hadoop-node: &hadoop-node
+  image: ynshung/hadoop-docker:latest
+  networks:
+    - hadoop
+  user: hadoop
+  stdin_open: true
 
 networks:
   hadoop:
